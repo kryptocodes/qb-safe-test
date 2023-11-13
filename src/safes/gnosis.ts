@@ -276,8 +276,8 @@ export class gnosis implements SafeInterface {
 				} else if(token.token.symbol === 'spCELO') {
 					tokenUSDRate = 0
 				}
-				const tokenBalance = (ethers.utils.formatUnits(token.balance, token.token.decimals)).toString()
-				const tokenUSDBalance = parseFloat(token.fiatBalance) > 0 ? parseFloat(token.fiatBalance) : parseFloat(tokenBalance)*tokenUSDRate
+				const tokenBalance = parseFloat(ethers.utils.formatUnits(token.balance, token.token.decimals))
+				const tokenUSDBalance = parseFloat(token.fiatBalance) > 0 ? parseFloat(token.fiatBalance) : tokenBalance*tokenUSDRate
 				let check = parseFloat(token.fiatConversion) > 0  ? parseFloat(token.fiatConversion) : tokenUSDRate
 				console.log("type of token.fiatConversion", typeof token.fiatConversion, typeof tokenUSDRate, typeof check)
 				tokenList.push({
