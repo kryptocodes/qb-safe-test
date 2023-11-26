@@ -257,6 +257,7 @@ export class gnosis implements SafeInterface {
 		const tokenList: any[] = []
 		const gnosisUrl = `https://safe-client.safe.global/v1/chains/${this.chainId}/safes/${this.safeAddress}/balances/usd`
 		const response = await axios.get(gnosisUrl)
+		console.log(response)
 		const tokensFetched = response.data.items
 		const celoTokensUSDRateMapping = await (await getCeloTokenUSDRate()).data;
 		Promise.all(

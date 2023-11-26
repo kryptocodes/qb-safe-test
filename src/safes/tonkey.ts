@@ -20,7 +20,7 @@ export class tonkey implements SafeInterface {
     }
 
     toRawAddress(address: string): string {
-        console.log('new version is here')
+        console.log('new version is here test')
         return new TonWeb.Address(address).toString(false);
     }
 
@@ -76,12 +76,13 @@ export class tonkey implements SafeInterface {
     }
 
     async signToken(tonTransfer: any, wallet: any) {
-
+        console.log('started signing token')
         const orderCellBoc = tonTransfer.multiSigExecutionInfo.orderCellBoc;
-
+        console.log('orderCellBoc', orderCellBoc)
         const [cell] = TonWeb.boc.Cell.fromBoc(orderCellBoc);
-
+        console.log('cell', cell)
         const orderHash = TonWeb.utils.bytesToHex(await cell.hash());
+        console.log('orderHash', orderHash)
         try {
             const signature = await wallet.send("ton_rawSign", {
                 data: orderHash,
@@ -100,7 +101,7 @@ export class tonkey implements SafeInterface {
     }
 
     async genToken(recipient: string, amount: string, wallet: any, ownerIndex: number, remark: string): Promise<any> {
-        console.log('started generating token')
+        console.log('started generating token testing')
         const rawSafeAddr = (this.toRawAddress(this.safeAddress))
 
         const nanoAmount = TonWeb.utils.toNano(amount).toString()
@@ -170,12 +171,10 @@ export class tonkey implements SafeInterface {
                 console.log("Error in genToken: couldn't generate token")
                 throw new Error('cannot generate token')
             }
-            console.log(res, 'res')
-            console.log("get payload successfully")
-
+            console.log('res.tonTransfer.multiSigExecutionInfo', res.tonTransfer.multiSigExecutionInfo)
             const signature = await this.signToken(res.tonTransfer, wallet)
 
-            console.log('signed successfully: ', signature)
+           
             res.tonTransfer.multiSigExecutionInfo.confirmations[ownerIndex] = signature;
             return res.tonTransfer
         }
