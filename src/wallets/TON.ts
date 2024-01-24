@@ -40,6 +40,7 @@ export class TonWallet {
 
 	sendMoney = async (toAddress: string, amount: number, isTestnet: boolean = false, metadata: string, callback: any) => {
 		try {
+			console.log('TON sendMoney', toAddress, amount, isTestnet, metadata)
 			await this.connect()
 			await sleep(1000)
 			if (this.tonReady) {
@@ -47,7 +48,7 @@ export class TonWallet {
 				const wallet = tonWeb.wallet.create({ address: this.address })
 
 				console.log(wallet.methods.seqno)
-				const lastTx = (await tonWeb.getTransactions(this.address, 1))[0]
+			
 
 				const nanoAmount = TonWeb.utils.toNano(amount.toString()).toString()
 
@@ -72,10 +73,21 @@ export class TonWallet {
 					}]
 				)
 				
-				console.log('TON result', result)
+				console.log('TON result checking', result)
 				
 				if (result) {
 					await sleep(1000)
+					try{
+						const lastTx = (await tonWeb.getTransactions(this.address, 1))
+						if(lastTx){
+							console.log('TON lastTx', lastTx)
+							callback({ transactionHash: lastTx[0].transaction_id.hash })
+						}
+					}
+					catch(e){
+						console.log(e, 'TON error')
+						callback({ error: 'Transaction failed' })
+					}
 					// let interval = setInterval(async() => {
 					// 	console.log('TON interval called');
 					// 	// if(new Date().getTime() - startTime > 30000){
@@ -110,7 +122,6 @@ export class TonWallet {
 					// 	txHash = tx.transaction_id.hash
 					// }
 					// console.log('TON txHash', txHash)
-					callback({ transactionHash: "dfdfd" })
 
 				} else {
 					callback({ error: 'Transaction failed' })
