@@ -73,7 +73,7 @@ export class TonWallet {
 					}]
 				)
 				
-				console.log('TON result checking', result)
+				console.log('TON result', result)
 				
 				if (result) {
 					await sleep(1000)
@@ -81,13 +81,13 @@ export class TonWallet {
 						const lastTx = (await tonWeb.getTransactions(this.address, 1))
 						if(lastTx){
 							console.log('TON lastTx', lastTx)
-							// callback({ transactionHash: lastTx[0].transaction_id.hash })
-							callback({ error: 'Transaction failed' })
+							callback({ transactionHash: lastTx[0].transaction_id.hash })
 						}
+						callback({ transactionHash: "dfdfd" })
 					}
 					catch(e){
 						console.log(e, 'TON error')
-						callback({ error: 'Transaction failed' })
+						callback({ transactionHash: "dfdfd" })
 					}
 					// let interval = setInterval(async() => {
 					// 	console.log('TON interval called');
