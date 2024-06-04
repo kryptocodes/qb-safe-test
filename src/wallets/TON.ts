@@ -40,7 +40,6 @@ export class TonWallet {
 
 	sendMoney = async (toAddress: string, amount: number, isTestnet: boolean = false, metadata: string, callback: any) => {
 		try {
-			console.log('TON sendMoney', toAddress, amount, isTestnet, metadata)
 			await this.connect()
 			await sleep(1000)
 			if (this.tonReady) {
@@ -48,7 +47,6 @@ export class TonWallet {
 				const wallet = tonWeb.wallet.create({ address: this.address })
 
 				console.log(wallet.methods.seqno)
-			
 
 				const nanoAmount = TonWeb.utils.toNano(amount.toString()).toString()
 
@@ -81,7 +79,7 @@ export class TonWallet {
 						const lastTx = (await tonWeb.getTransactions(this.address, 1))
 						if(lastTx){
 							console.log('TON lastTx', lastTx)
-							callback({ transactionHash: lastTx[0].transaction_id.hash ?? "dfdfd" })
+							callback({ transactionHash: lastTx[0]?.transaction_id?.hash ?? "dfdfd" })
 						}
 					}
 					catch(e){
@@ -122,6 +120,7 @@ export class TonWallet {
 					// 	txHash = tx.transaction_id.hash
 					// }
 					// console.log('TON txHash', txHash)
+					// callback({ transactionHash: "dfdfd" })
 
 				} else {
 					callback({ error: 'Transaction failed' })

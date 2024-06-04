@@ -1,18 +1,19 @@
 import { ArbitrumMainnet } from "../chains/arbitrum-mainnet"
 import { AuroraMainnet } from "../chains/aurora-mainnet"
 import { AvalancheMainnet } from "../chains/avalanche-mainnet"
+import { BaseMainnet } from "../chains/base-mainnet"
 import { BinanceMainnet } from "../chains/binance-mainnet"
 import { CeloMainnet } from "../chains/celo-mainnet"
 import { EnergyWebChain } from "../chains/energy-web-chain"
 import { EnergyWebVolta } from "../chains/energy-web-volta"
 import { EthereumMainnet } from "../chains/ethereum-mainnet"
 import { GnosisMainnet } from "../chains/gnosis-mainnet"
-import { GoerliTestnet } from "../chains/goerli-testnet"
 import { IoTexMainnet } from "../chains/iotex-mainnet"
 import { IoTexTestnet } from "../chains/iotex-testnet"
 import { OptimismMainnet } from "../chains/optimism-mainnet"
 import { PolygonMainnet } from "../chains/polygon-mainnet"
 import { RinkebyTestnet } from "../chains/rinkeby-testnet"
+import { SepoliaTestnet } from "../chains/sepolia-testnet"
 import { SolanaDevnet } from "../chains/solana-devnet"
 import { SolanaMainnet } from "../chains/solana-mainnet"
 import { TelosMainnet } from "../chains/telos-mainnet"
@@ -30,11 +31,11 @@ const SupportedSafesInfo: {[chainId: number]: {name: string, chainId: number, rp
         rpcURL: "https://safe-transaction.rinkeby.gnosis.io/",
         class: RinkebyTestnet,
     },
-    5: {
-        name: "Goerli Testnet",
-        chainId: 5,
+    11155111: {
+        name: "Seolia Testnet",
+        chainId: 11155111,
         rpcURL: "https://safe-transaction-goerli.safe.global/",
-        class: GoerliTestnet,
+        class: SepoliaTestnet,
     },
     10: {
         name: "Optimism Mainnet",
@@ -65,6 +66,12 @@ const SupportedSafesInfo: {[chainId: number]: {name: string, chainId: number, rp
         chainId: 246,
         rpcURL: "https://safe-transaction.ewc.gnosis.io/",
         class: EnergyWebChain,
+    },
+    8453: {
+        name: "Base Mainnet",
+        chainId: 8453,
+        rpcURL: "https://safe-transaction-base.safe.global/",
+        class: BaseMainnet,
     },
     73799: {
         name: "Energy Web Volta",

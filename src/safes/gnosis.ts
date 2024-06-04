@@ -7,7 +7,6 @@ import { getCeloTokenUSDRate } from '../utils/tokenConversionUtils';
 import axios from 'axios';
 import { createEVMMetaTransactions } from '../utils/gnosisUtils';
 import { errorMessage, SafeDetailsInterface, SafeInterface, TokenDetailsInterface } from '../types/Safe';
-import { switchNetwork } from '@wagmi/core'
 
 export class gnosis implements SafeInterface {
 
@@ -29,15 +28,14 @@ export class gnosis implements SafeInterface {
 		const readyToExecuteTxs = await createEVMMetaTransactions(workspaceId, grantAddress, this.chainId.toString(), initiateTransactionData)
 		console.log('creating gnosis transaction for (edited)', readyToExecuteTxs)
 		//@ts-ignore
-		const provider = new ethers.providers.Web3Provider(window.ethereum)
+		const provider = new ethers.providers.Web3Provider(wallet || window.ethereum)
 		await provider.send('eth_requestAccounts', [])
 
 		const signer = provider.getSigner()
 		const currentChain = await signer.getChainId()
 		if (currentChain !== this.chainId) {
-			const network = await switchNetwork({
-				chainId: this.chainId,
-			})
+			console.log("you're on the wrong chain")
+			return {error: "you're on the wrong chain"}
 		}
 
 		const ethAdapter = new EthersAdapter({
@@ -144,9 +142,9 @@ export class gnosis implements SafeInterface {
 		}
 	}
 
-    async isOwner(userAddress: string): Promise<boolean> {
+	async isOwner(userAddress: string, walletProvider?: any): Promise<boolean> {
 		//@ts-ignore
-		const provider = new ethers.providers.Web3Provider(window.ethereum)
+		const provider = new ethers.providers.Web3Provider(walletProvider || window.ethereum)
 		await provider.send('eth_requestAccounts', [])
 
 		const signer = provider.getSigner()
@@ -275,6 +273,9 @@ export class gnosis implements SafeInterface {
 					tokenUSDRate = 0
 				} else if(token.tokenInfo.symbol === 'spCELO') {
 					tokenUSDRate = 0
+				} else if(token.tokenInfo.symbol === 'USDC') {
+					token.fiatConversion = 1;
+					tokenUSDRate = 1;
 				}
 				const tokenBalance = parseFloat(ethers.utils.formatUnits(token.balance, token.tokenInfo.decimals))
 				const tokenUSDBalance = parseFloat(token.fiatBalance) > 0 ? parseFloat(token.fiatBalance) : tokenBalance*tokenUSDRate
@@ -282,6 +283,7 @@ export class gnosis implements SafeInterface {
 					tokenIcon: token.tokenInfo.logoUri,
 					tokenName: token.tokenInfo.symbol,
 					tokenValueAmount: tokenBalance,
+					isNative: token.tokenInfo.type === 'NATIVE_TOKEN' ? true : false,
 					usdValueAmount: tokenUSDBalance,
 					mintAddress: '',
 					fiatConversion: parseFloat(token.fiatConversion) > 0  ? parseFloat(token.fiatConversion) : tokenUSDRate,
